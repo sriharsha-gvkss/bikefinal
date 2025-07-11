@@ -14,9 +14,15 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
   
-  # Kafka configuration
+  # Kafka configuration for Upstash
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    security:
+      protocol: ${SPRING_KAFKA_SECURITY_PROTOCOL:SASL_SSL}
+    sasl:
+      mechanism: ${SPRING_KAFKA_SASL_MECHANISM:PLAIN}
+      jaas:
+        config: ${SPRING_KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="your-username" password="your-password";}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
