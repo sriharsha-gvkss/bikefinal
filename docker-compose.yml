@@ -1,0 +1,90 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:12
+    container_name: biketaxi-postgres
+    environment:
+      POSTGRES_DB: biketaxi
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - biketaxi-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: biketaxi-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - biketaxi-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: biketaxi-kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    networks:
+      - biketaxi-net
+
+  booking-service:
+    image: sriharsha3/bikeriderapp:booking-service
+    container_name: biketaxi-booking-service
+    depends_on:
+      - postgres
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/biketaxi
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      # Optional: Set your Google Maps API key here for better location names
+      # GOOGLE_MAPS_API_KEY: your_google_maps_api_key_here
+    ports:
+      - "8080:8080"
+    networks:
+      - biketaxi-net
+
+  driver-matching-service:
+    image: sriharsha3/bikeriderapp:driver-matching-service
+    container_name: biketaxi-driver-matching-service
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8082:8082"
+    networks:
+      - biketaxi-net
+
+  frontend:
+    image: sriharsha3/bikeriderapp:frontend
+    container_name: biketaxi-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - booking-service
+      - driver-matching-service
+    networks:
+      - biketaxi-net
+
+volumes:
+  postgres_data: 
+
+networks:
+  biketaxi-net:
+    driver: bridge 

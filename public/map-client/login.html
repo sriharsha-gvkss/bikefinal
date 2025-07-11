@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>👤 Rider Login - Bike Taxi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(45deg, #1976D2, #2196F3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .message.error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .toggle-form {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .toggle-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-toggle {
+            display: none;
+        }
+        
+        .form-toggle.active {
+            display: block;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link a:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="header">
+            <h1>👤 Rider Portal</h1>
+            <p>Welcome back! Sign in to book your next ride.</p>
+            <div class="role-badge">Rider</div>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="form-toggle active" onsubmit="login(event)">
+            <div id="loginMessage" class="message"></div>
+            
+            <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" name="loginUsername" placeholder="Enter your username" autocomplete="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="loginPassword" placeholder="Enter your password" autocomplete="current-password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Sign In as Rider</button>
+            
+            <div class="toggle-form">
+                <p>Don't have an account? <a href="signup.html">Sign up as Rider</a></p>
+            </div>
+        </form>
+        
+        <div class="back-link">
+            <a href="auth.html">← Back to Role Selection</a>
+            <br><br>
+            <small><a href="#" onclick="clearCache(); return false;" style="color: #999; font-size: 0.8rem;">Clear Cache (if having issues)</a></small>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        let sessionToken = null;
+        
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            // Clear any potentially corrupted localStorage data first
+            const savedToken = localStorage.getItem('sessionToken');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            // If we have data but it's corrupted or causing issues, clear it
+            if (savedToken && savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    
+                    // Check if user is a rider and redirect if valid
+                    if (user.role === 'RIDER') {
+                        // Redirect to rider app without API verification
+                        window.location.href = 'index.html';
+                    } else {
+                        // Clear invalid user data
+                        localStorage.removeItem('sessionToken');
+                        localStorage.removeItem('currentUser');
+                    }
+                } catch (error) {
+                    // If JSON parsing fails, clear corrupted data
+                    console.error('Corrupted user data, clearing localStorage');
+                    localStorage.removeItem('sessionToken');
+                    localStorage.removeItem('currentUser');
+                }
+            }
+        });
+        
+        function showMessage(message, type) {
+            const messageElement = document.getElementById('loginMessage');
+            messageElement.textContent = message;
+            messageElement.className = 'message ' + type;
+            messageElement.style.display = 'block';
+        }
+        
+        function clearCache() {
+            localStorage.clear();
+            sessionStorage.clear();
+            showMessage('Cache cleared! Please refresh the page.', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
+        
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing In...';
+            submitBtn.disabled = true;
+            
+            fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    // Try to get error details from response
+                    return response.text().then(text => {
+                        console.log('Error response body:', text);
+                        let errorMessage = 'Login failed. Please try again.';
+                        
+                        try {
+                            const errorData = JSON.parse(text);
+                            if (errorData.message) {
+                                errorMessage = errorData.message;
+                            }
+                        } catch (e) {
+                            // If we can't parse JSON, use a generic message
+                            if (response.status === 400) {
+                                errorMessage = 'Invalid username or password. Please check your credentials.';
+                            } else if (response.status === 404) {
+                                errorMessage = 'Service temporarily unavailable. Please try again later.';
+                            } else if (response.status === 500) {
+                                errorMessage = 'Server error. Please try again later.';
+                            }
+                        }
+                        
+                        throw new Error(errorMessage);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Check if user is a rider
+                    if (data.user.role !== 'RIDER') {
+                        showMessage('This account is not registered as a rider. Please use a rider account.', 'error');
+                        return;
+                    }
+                    
+                    sessionToken = data.sessionToken;
+                    currentUser = data.user;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('sessionToken', sessionToken);
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    showMessage('Login successful! Getting your location...', 'success');
+                    
+                    // Get user location after successful login
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                const location = {
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude,
+                                    accuracy: position.coords.accuracy,
+                                    timestamp: position.timestamp
+                                };
+                                
+                                // Save location to localStorage
+                                localStorage.setItem('userLocation', JSON.stringify(location));
+                                console.log('Location saved:', location);
+                                
+                                showMessage('Location captured! Redirecting to rider app...', 'success');
+                                
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1500);
+                            },
+                            function(error) {
+                                console.warn('Location access denied or failed:', error);
+                                showMessage('Location access denied. Redirecting anyway...', 'success');
+                                
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1500);
+                            },
+                            {
+                                enableHighAccuracy: true,
+                                timeout: 10000,
+                                maximumAge: 60000
+                            }
+                        );
+                    } else {
+                        console.warn('Geolocation not supported');
+                        showMessage('Location not supported. Redirecting...', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    }
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage(`Login failed: ${error.message}`, 'error');
+            })
+            .finally(() => {
+                // Restore button state
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.textContent = 'Sign In as Rider';
+                submitBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html> 

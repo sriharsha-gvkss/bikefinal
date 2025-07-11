@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Driver Login - Bike Taxi</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: rgb(254, 253, 253);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(45deg, #1976D2, #2196F3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .message.error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .toggle-form {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .toggle-form a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-toggle {
+            display: none;
+        }
+        
+        .form-toggle.active {
+            display: block;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link a:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="header">
+            <h1>🚗 Driver Portal</h1>
+            <p>Welcome back! Sign in to access your driver dashboard.</p>
+            <div class="role-badge">Driver</div>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="form-toggle active" onsubmit="event.preventDefault(); login();">
+            <div id="loginMessage" class="message"></div>
+            
+            <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text" 
+                       id="loginUsername" 
+                       name="loginUsername"
+                       placeholder="Enter your username" 
+                       required 
+                       autocomplete="username"
+                       aria-label="Username"
+                       aria-describedby="username-help">
+                <div id="username-help" class="help-text" style="display: none; font-size: 0.8rem; color: #666; margin-top: 4px;">
+                    Username must be 3-20 characters, letters, numbers, and underscore only
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" 
+                       id="loginPassword" 
+                       name="loginPassword"
+                       placeholder="Enter your password" 
+                       required 
+                       autocomplete="current-password"
+                       aria-label="Password"
+                       aria-describedby="password-help">
+                <div id="password-help" class="help-text" style="display: none; font-size: 0.8rem; color: #666; margin-top: 4px;">
+                    Password must be at least 6 characters
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" type="submit">Sign In</button>
+            
+            <div class="toggle-form">
+                <p>Don't have an account? <a href="#" onclick="toggleForm('register')">Sign up as Driver</a></p>
+            </div>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="registerForm" class="form-toggle" onsubmit="event.preventDefault(); register();">
+            <div id="registerMessage" class="message"></div>
+            
+            <div class="form-group">
+                <label for="registerUsername">Username</label>
+                <input type="text" id="registerUsername" name="registerUsername" placeholder="Choose a username" required autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" name="registerEmail" placeholder="Enter your email" required autocomplete="email">
+            </div>
+            
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" name="registerPassword" placeholder="Choose a password" required autocomplete="new-password">
+            </div>
+            
+            <button class="btn btn-primary" type="submit">Sign Up as Driver</button>
+            
+            <div class="toggle-form">
+                <p>Already have an account? <a href="#" onclick="toggleForm('login')">Sign in</a></p>
+            </div>
+        </form>
+        
+        <div class="back-link">
+            <a href="auth.html">← Back to Role Selection</a>
+        </div>
+        
+        <!-- Test Section -->
+        <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 10px; border: 1px solid #2196f3;">
+            <h4 style="margin-bottom: 10px; color: #1976d2;">Test Section</h4>
+            <button onclick="testLogin()" style="margin: 5px; padding: 8px 16px; background: #2196f3; color: white; border: none; border-radius: 5px; cursor: pointer;">Test Login (driver1/password123)</button>
+            <button onclick="clearAllData()" style="margin: 5px; padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Clear All Data</button>
+            <button onclick="goToDriverSimulator()" style="margin: 5px; padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">Go to Driver Simulator</button>
+        </div>
+        
+        <!-- Debug Panel -->
+        <div id="debugPanel" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; border: 1px solid #dee2e6;">
+            <h4 style="margin-bottom: 10px; color: #495057;">Debug Info</h4>
+            <div id="debugInfo" style="font-size: 0.9rem; color: #6c757d;"></div>
+            <button onclick="clearDebugInfo()" style="margin-top: 10px; padding: 5px 10px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Clear Debug</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        let sessionToken = null;
+        let debugLog = [];
+        
+        function addDebugInfo(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push(`[${timestamp}] ${message}`);
+            updateDebugDisplay();
+        }
+        
+        function updateDebugDisplay() {
+            const debugInfo = document.getElementById('debugInfo');
+            if (debugInfo) {
+                debugInfo.innerHTML = debugLog.slice(-10).join('<br>');
+            }
+        }
+        
+        function clearDebugInfo() {
+            debugLog = [];
+            updateDebugDisplay();
+        }
+        
+        // Test functions
+        function testLogin() {
+            addDebugInfo('Testing login with driver1/password123...');
+            
+            // Fill in the form
+            document.getElementById('loginUsername').value = 'driver1';
+            document.getElementById('loginPassword').value = 'password123';
+            
+            // Call login function
+            login();
+        }
+        
+        function clearAllData() {
+            addDebugInfo('Clearing all localStorage data...');
+            localStorage.clear();
+            addDebugInfo('All data cleared');
+        }
+        
+        function goToDriverSimulator() {
+            addDebugInfo('Manually navigating to driver simulator...');
+            window.location.href = 'http://localhost:5500/driver-simulator/';
+        }
+        
+        // Check if user is already logged in - Simplified to prevent re-rendering
+        let redirectCheckComplete = false;
+        window.addEventListener('DOMContentLoaded', function() {
+            if (redirectCheckComplete) return; // Prevent multiple checks
+            redirectCheckComplete = true;
+            
+            addDebugInfo('Page loaded');
+            
+            // Only check if we should redirect, don't make any API calls
+            const savedToken = localStorage.getItem('driverToken');
+            const savedUser = localStorage.getItem('driverUserData');
+            
+            addDebugInfo(`Saved token: ${savedToken ? 'Present' : 'Missing'}`);
+            addDebugInfo(`Saved user: ${savedUser ? 'Present' : 'Missing'}`);
+            
+            if (savedToken && savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    addDebugInfo(`User role: ${user.role}`);
+                    
+                    // Only redirect if user is definitely a driver
+                    if (user.role === 'DRIVER' && savedToken) {
+                        addDebugInfo('Driver session found, redirecting...');
+                        // Use a simple redirect without any additional checks
+                        setTimeout(() => {
+                            window.location.replace('http://localhost:5500/driver-simulator/');
+                        }, 100);
+                        return;
+                    } else {
+                        addDebugInfo('User is not a driver or token missing');
+                        // Clear invalid data
+                        localStorage.removeItem('driverToken');
+                        localStorage.removeItem('driverUserData');
+                    }
+                } catch (error) {
+                    addDebugInfo(`Error parsing user data: ${error.message}`);
+                    // Clear invalid data
+                    localStorage.removeItem('driverToken');
+                    localStorage.removeItem('driverUserData');
+                }
+            } else {
+                addDebugInfo('No saved session found');
+            }
+        });
+        
+        function toggleForm(formType) {
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById(formType + 'Form').classList.add('active');
+            
+            // Clear messages
+            clearMessages();
+        }
+        
+        function showMessage(formType, message, type) {
+            const messageElement = document.getElementById(formType + 'Message');
+            if (messageElement) {
+                messageElement.textContent = message;
+                messageElement.className = 'message ' + type;
+                messageElement.style.display = 'block';
+                
+                // Auto-hide success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        messageElement.style.display = 'none';
+                    }, 5000);
+                }
+            }
+        }
+        
+        function clearMessages() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }
+        
+        function showLoadingState(show = true) {
+            const loginBtn = document.querySelector('.btn-primary');
+            if (loginBtn) {
+                if (show) {
+                    loginBtn.textContent = 'Signing In...';
+                    loginBtn.disabled = true;
+                } else {
+                    loginBtn.textContent = 'Sign In';
+                    loginBtn.disabled = false;
+                }
+            }
+        }
+        
+        let loginInProgress = false;
+        function login() {
+            if (loginInProgress) {
+                addDebugInfo('Login already in progress, skipping...');
+                return Promise.reject('Login already in progress');
+            }
+            
+            loginInProgress = true;
+            addDebugInfo('Login function called');
+            
+            const username = document.getElementById('loginUsername')?.value;
+            const password = document.getElementById('loginPassword')?.value;
+            
+            // Sanitize inputs
+            const sanitizedUsername = sanitizeInput(username);
+            const sanitizedPassword = sanitizeInput(password);
+            
+            addDebugInfo(`Login attempt for username: ${sanitizedUsername}`);
+            
+            if (!sanitizedUsername || !sanitizedPassword) {
+                addDebugInfo('Login failed: Missing username or password');
+                showMessage('login', 'Please fill in all fields', 'error');
+                loginInProgress = false;
+                return Promise.reject('Missing credentials');
+            }
+            
+            // Validate inputs
+            if (!validateUsername(sanitizedUsername)) {
+                addDebugInfo('Login failed: Invalid username format');
+                showMessage('login', 'Username must be 3-20 characters, letters, numbers, and underscore only', 'error');
+                loginInProgress = false;
+                return Promise.reject('Invalid username format');
+            }
+            
+            if (!validatePassword(sanitizedPassword)) {
+                addDebugInfo('Login failed: Password too short');
+                showMessage('login', 'Password must be at least 6 characters', 'error');
+                loginInProgress = false;
+                return Promise.reject('Password too short');
+            }
+            
+            // Disable login button to prevent multiple clicks
+            const loginBtn = document.querySelector('.btn-primary');
+            const originalText = loginBtn?.textContent || 'Sign In';
+            if (loginBtn) {
+                loginBtn.textContent = 'Signing In...';
+                loginBtn.disabled = true;
+            }
+            
+            console.log('Attempting login for username:', sanitizedUsername);
+            
+            return fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: sanitizedUsername,
+                    password: sanitizedPassword
+                })
+            })
+            .then(response => {
+                addDebugInfo(`Login response status: ${response.status}`);
+                console.log('Login response status:', response.status);
+                
+                if (!response.ok) {
+                    // Try to get error details from response
+                    return response.text().then(text => {
+                        console.log('Error response body:', text);
+                        let errorMessage = 'Login failed. Please try again.';
+                        
+                        try {
+                            const errorData = JSON.parse(text);
+                            if (errorData.message) {
+                                errorMessage = errorData.message;
+                            }
+                        } catch (e) {
+                            // If we can't parse JSON, use a generic message
+                            if (response.status === 400) {
+                                errorMessage = 'Invalid username or password. Please check your credentials.';
+                            } else if (response.status === 404) {
+                                errorMessage = 'Service temporarily unavailable. Please try again later.';
+                            } else if (response.status === 500) {
+                                errorMessage = 'Server error. Please try again later.';
+                            }
+                        }
+                        
+                        throw new Error(errorMessage);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                addDebugInfo(`Login response: ${data.success ? 'Success' : 'Failed'}`);
+                console.log('Login response data:', data);
+                
+                if (data.success) {
+                    // Check if user is a driver
+                    if (data.user.role !== 'DRIVER') {
+                        addDebugInfo('Login failed: User is not a driver');
+                        showMessage('login', 'This account is not registered as a driver', 'error');
+                        throw new Error('User is not a driver');
+                    }
+                    
+                    sessionToken = data.sessionToken;
+                    currentUser = data.user;
+                    
+                    addDebugInfo('Login successful, saving to localStorage');
+                    
+                    // Save to localStorage with correct keys for driver simulator
+                    localStorage.setItem('driverToken', sessionToken);
+                    localStorage.setItem('driverUserData', JSON.stringify(currentUser));
+                    
+                    showMessage('login', 'Login successful! Redirecting to driver dashboard...', 'success');
+                    
+                    // Clear any existing redirect counters
+                    sessionStorage.removeItem('redirectCount');
+                    
+                    // Ensure data is saved before redirecting
+                    addDebugInfo('Ensuring session data is saved...');
+                    setTimeout(() => {
+                        // Double-check that data is saved with correct keys
+                        const savedToken = localStorage.getItem('driverToken');
+                        const savedUser = localStorage.getItem('driverUserData');
+                        
+                        if (savedToken && savedUser) {
+                            addDebugInfo('Session data confirmed, redirecting...');
+                            window.location.href = 'http://localhost:5500/driver-simulator/';
+                        } else {
+                            addDebugInfo('Session data not saved, retrying...');
+                            // Re-save the data with correct keys
+                            localStorage.setItem('driverToken', sessionToken);
+                            localStorage.setItem('driverUserData', JSON.stringify(currentUser));
+                            setTimeout(() => {
+                                addDebugInfo('Redirecting to driver dashboard...');
+                                window.location.href = 'http://localhost:5500/driver-simulator/';
+                            }, 500);
+                        }
+                    }, 1000);
+                } else {
+                    addDebugInfo(`Login failed: ${data.message}`);
+                    showMessage('login', data.message || 'Login failed', 'error');
+                    throw new Error(data.message || 'Login failed');
+                }
+            })
+            .catch(error => {
+                addDebugInfo(`Login error: ${error.message}`);
+                console.error('Login error:', error);
+                showMessage('login', 'Login failed. Please check your connection and try again.', 'error');
+                throw error;
+            })
+            .finally(() => {
+                // Re-enable login button
+                if (loginBtn) {
+                    loginBtn.textContent = originalText;
+                    loginBtn.disabled = false;
+                }
+                loginInProgress = false;
+            });
+        }
+        
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            if (!username || !email || !password) {
+                showMessage('register', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            // For driver registration, we need additional fields
+            // Since this is a simplified form, we'll use default values
+            const requestData = {
+                username: username,
+                email: email,
+                password: password,
+                role: 'DRIVER',
+                phoneNumber: '+1234567890', // Default phone number
+                vehicleType: 'BIKE', // Default vehicle type
+                licenseNumber: 'LIC' + Date.now() // Generate a license number
+            };
+            
+            console.log('Sending driver registration request:', requestData);
+            
+            fetch('http://localhost:8080/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                console.log('Registration response status:', response.status);
+                
+                if (!response.ok) {
+                    // Try to get error details from response
+                    return response.text().then(text => {
+                        console.log('Error response body:', text);
+                        let errorMessage = 'Registration failed. Please try again.';
+                        
+                        try {
+                            const errorData = JSON.parse(text);
+                            if (errorData.message) {
+                                errorMessage = errorData.message;
+                            }
+                        } catch (e) {
+                            // If we can't parse JSON, use a generic message
+                            if (response.status === 400) {
+                                errorMessage = 'Please check your information and try again.';
+                            } else if (response.status === 404) {
+                                errorMessage = 'Service temporarily unavailable. Please try again later.';
+                            } else if (response.status === 500) {
+                                errorMessage = 'Server error. Please try again later.';
+                            }
+                        }
+                        
+                        throw new Error(errorMessage);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showMessage('register', 'Registration successful! Please sign in.', 'success');
+                    
+                    // Clear form
+                    document.getElementById('registerUsername').value = '';
+                    document.getElementById('registerEmail').value = '';
+                    document.getElementById('registerPassword').value = '';
+                    
+                    // Switch to login form
+                    setTimeout(() => {
+                        toggleForm('login');
+                    }, 2000);
+                } else {
+                    showMessage('register', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('register', error.message, 'error');
+            });
+        }
+        
+        // Update autocomplete for login fields
+        document.getElementById('loginUsername').setAttribute('autocomplete', 'username');
+        document.getElementById('loginPassword').setAttribute('autocomplete', 'current-password');
+        
+        // Input validation and sanitization functions
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function sanitizeInput(input) {
+            if (typeof input !== 'string') return '';
+            return input.trim().replace(/[<>]/g, '');
+        }
+
+        function validateUsername(username) {
+            // Username should be 3-20 characters, alphanumeric and underscore only
+            const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+            return usernameRegex.test(username);
+        }
+
+        function validatePassword(password) {
+            // Password should be at least 6 characters
+            return password && password.length >= 6;
+        }
+    </script>
+</body>
+</html> 

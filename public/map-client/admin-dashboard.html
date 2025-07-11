@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ Admin Dashboard - Bike Taxi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .stat {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+        
+        .recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .recent-activity h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .activity-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-info {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .activity-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .activity-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                text-align: center;
+                margin-top: 15px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div>
+                <h1>⚙️ Admin Dashboard</h1>
+                <p>System Management & Monitoring</p>
+            </div>
+            <div class="user-info">
+                <div id="adminInfo">Loading...</div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Total Users</h3>
+                <div class="stat" id="totalUsers">-</div>
+                <div class="stat-label">Registered users across all roles</div>
+            </div>
+            
+            <div class="card">
+                <h3>Active Drivers</h3>
+                <div class="stat" id="activeDrivers">-</div>
+                <div class="stat-label">Drivers currently online</div>
+            </div>
+            
+            <div class="card">
+                <h3>Total Bookings</h3>
+                <div class="stat" id="totalBookings">-</div>
+                <div class="stat-label">Rides completed today</div>
+            </div>
+            
+            <div class="card">
+                <h3>System Status</h3>
+                <div class="stat" id="systemStatus">🟢</div>
+                <div class="stat-label">All services operational</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="action-btn" onclick="viewUsers()">View All Users</button>
+            <button class="action-btn secondary" onclick="viewBookings()">View Bookings</button>
+            <button class="action-btn secondary" onclick="systemLogs()">System Logs</button>
+            <button class="action-btn danger" onclick="emergencyStop()">Emergency Stop</button>
+        </div>
+        
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div id="activityList">
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <div class="activity-title">System startup completed</div>
+                        <div class="activity-time">2 minutes ago</div>
+                    </div>
+                    <span class="activity-status status-success">Success</span>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <div class="activity-title">New driver registration</div>
+                        <div class="activity-time">5 minutes ago</div>
+                    </div>
+                    <span class="activity-status status-success">Success</span>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <div class="activity-title">Booking #1234 completed</div>
+                        <div class="activity-time">10 minutes ago</div>
+                    </div>
+                    <span class="activity-status status-success">Success</span>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <div class="activity-title">Database backup scheduled</div>
+                        <div class="activity-time">15 minutes ago</div>
+                    </div>
+                    <span class="activity-status status-pending">Pending</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        
+        // Check authentication on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedToken = localStorage.getItem('sessionToken');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (!savedToken || !savedUser) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(savedUser);
+            
+            // Verify token and admin role
+            if (currentUser.role !== 'ADMIN') {
+                alert('Access denied. Admin privileges required.');
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            fetch('http://localhost:8080/api/auth/me', {
+                headers: {
+                    'Authorization': 'Bearer ' + savedToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    localStorage.removeItem('sessionToken');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'admin-login.html';
+                } else {
+                    displayAdminInfo();
+                    loadDashboardData();
+                }
+            })
+            .catch(error => {
+                console.error('Error checking session:', error);
+                localStorage.removeItem('sessionToken');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'admin-login.html';
+            });
+        });
+        
+        function displayAdminInfo() {
+            const adminInfo = document.getElementById('adminInfo');
+            adminInfo.innerHTML = `
+                <div>Welcome, ${currentUser.username}</div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">${currentUser.email}</div>
+            `;
+        }
+        
+        function loadDashboardData() {
+            // Simulate loading dashboard data
+            setTimeout(() => {
+                document.getElementById('totalUsers').textContent = '1,247';
+                document.getElementById('activeDrivers').textContent = '89';
+                document.getElementById('totalBookings').textContent = '156';
+                document.getElementById('systemStatus').textContent = '🟢';
+            }, 1000);
+        }
+        
+        function logout() {
+            localStorage.removeItem('sessionToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'auth.html';
+        }
+        
+        function viewUsers() {
+            alert('User management feature coming soon!');
+        }
+        
+        function viewBookings() {
+            alert('Booking management feature coming soon!');
+        }
+        
+        function systemLogs() {
+            alert('System logs feature coming soon!');
+        }
+        
+        function emergencyStop() {
+            if (confirm('Are you sure you want to perform an emergency stop? This will halt all services.')) {
+                alert('Emergency stop initiated. All services are being shut down.');
+                // In a real application, this would call the backend to stop services
+            }
+        }
+    </script>
+</body>
+</html> 

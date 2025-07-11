@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👤 Rider Registration - Bike Taxi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .message.error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .toggle-form {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .toggle-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link a:hover {
+            color: #333;
+        }
+        
+        .benefits {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .benefits h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .benefits ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .benefits li {
+            color: #666;
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .benefits li:before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="header">
+            <h1>👤 Rider Registration</h1>
+            <p>Join thousands of riders and travel with ease!</p>
+            <div class="role-badge">Rider</div>
+        </div>
+        
+        <div class="benefits">
+            <h3>Rider Benefits:</h3>
+            <ul>
+                <li>Quick and easy booking</li>
+                <li>Real-time driver tracking</li>
+                <li>Secure payment options</li>
+                <li>24/7 customer support</li>
+            </ul>
+        </div>
+        
+        <div id="registerMessage" class="message"></div>
+        
+        <form id="registerForm" onsubmit="register(event); return false;">
+            <div class="form-group">
+                <label for="registerUsername">Username</label>
+                <input type="text" id="registerUsername" placeholder="Choose a username" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Choose a password" required>
+            </div>
+            <div class="form-group">
+                <label for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm your password" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" placeholder="Enter your phone number" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Register as Rider</button>
+        </form>
+        
+        <div class="toggle-form">
+            <p>Already have an account? <a href="login.html">Sign in as Rider</a></p>
+        </div>
+        
+        <div class="back-link">
+            <a href="auth.html">← Back to Role Selection</a>
+        </div>
+    </div>
+    
+    <script>
+        function showMessage(message, type) {
+            const messageElement = document.getElementById('registerMessage');
+            messageElement.textContent = message;
+            messageElement.className = 'message ' + type;
+            messageElement.style.display = 'block';
+        }
+        
+        function register(event) {
+            if (event) event.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            
+            if (!username || !email || !password || !confirmPassword || !phoneNumber) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long', 'error');
+                return;
+            }
+            
+            // Simple phone number validation
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
+                showMessage('Please enter a valid phone number', 'error');
+                return;
+            }
+            
+            fetch('http://localhost:8080/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: 'RIDER',
+                    phoneNumber: phoneNumber
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    // Try to get error details from response
+                    return response.text().then(text => {
+                        console.log('Error response body:', text);
+                        let errorMessage = 'Registration failed. Please try again.';
+                        
+                        try {
+                            const errorData = JSON.parse(text);
+                            if (errorData.message) {
+                                errorMessage = errorData.message;
+                            }
+                        } catch (e) {
+                            // If we can't parse JSON, use a generic message
+                            if (response.status === 400) {
+                                errorMessage = 'Please check your information and try again.';
+                            } else if (response.status === 404) {
+                                errorMessage = 'Service temporarily unavailable. Please try again later.';
+                            } else if (response.status === 500) {
+                                errorMessage = 'Server error. Please try again later.';
+                            }
+                        }
+                        
+                        throw new Error(errorMessage);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showMessage('Registration successful! Please sign in.', 'success');
+                    
+                    // Clear form
+                    document.getElementById('registerUsername').value = '';
+                    document.getElementById('registerEmail').value = '';
+                    document.getElementById('registerPassword').value = '';
+                    document.getElementById('registerConfirmPassword').value = '';
+                    document.getElementById('phoneNumber').value = '';
+                    
+                    // Redirect to login after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage(error.message, 'error');
+            });
+        }
+    </script>
+</body>
+</html> 

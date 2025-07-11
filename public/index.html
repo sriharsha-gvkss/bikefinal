@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚲 Bike Taxi Service - Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .role-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .role-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+        
+        .role-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .role-btn.rider {
+            border-color: #4CAF50;
+        }
+        
+        .role-btn.driver {
+            border-color: #2196F3;
+        }
+        
+        .role-btn.admin {
+            border-color: #FF9800;
+        }
+        
+        .role-btn.test {
+            border-color: #9C27B0;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .feature p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .status {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status h4 {
+            margin-bottom: 10px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .status-ok {
+            color: #4CAF50;
+        }
+        
+        .status-error {
+            color: #f44336;
+        }
+        
+        @media (max-width: 768px) {
+            .role-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .role-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚲</div>
+        <h1>Bike Taxi Service</h1>
+        <p class="subtitle">Complete microservices architecture with real-time driver notifications</p>
+        
+        <div class="role-buttons">
+            <a href="/map-client/index.html" class="role-btn rider">
+                👤 Rider App
+                <br><small>Book rides & track drivers</small>
+            </a>
+            
+            <a href="/driver-simulator/index.html" class="role-btn driver">
+                🚗 Driver Dashboard
+                <br><small>Receive ride requests</small>
+            </a>
+            
+            <a href="/map-client/admin-dashboard.html" class="role-btn admin">
+                👨‍💼 Admin Panel
+                <br><small>Manage system</small>
+            </a>
+            
+            <a href="/test-driver-notifications.html" class="role-btn test">
+                🧪 Test Notifications
+                <br><small>Test driver alerts</small>
+            </a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🚀 Real-time Notifications</h3>
+                <p>Drivers receive instant notifications when users book rides</p>
+            </div>
+            <div class="feature">
+                <h3>🗺️ Live Tracking</h3>
+                <p>Real-time driver location tracking with WebSocket</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Auto Matching</h3>
+                <p>Intelligent driver-rider matching system</p>
+            </div>
+        </div>
+        
+        <div class="status" id="systemStatus">
+            <h4>🔧 System Status</h4>
+            <div class="status-item">
+                <span>Backend Service:</span>
+                <span id="backendStatus" class="status-ok">Checking...</span>
+            </div>
+            <div class="status-item">
+                <span>WebSocket:</span>
+                <span id="websocketStatus" class="status-ok">Checking...</span>
+            </div>
+            <div class="status-item">
+                <span>Database:</span>
+                <span id="databaseStatus" class="status-ok">Checking...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check system status
+        async function checkSystemStatus() {
+            try {
+                // Check backend
+                const backendResponse = await fetch('http://localhost:8080/api/bookings');
+                document.getElementById('backendStatus').textContent = backendResponse.ok ? '✅ Running' : '❌ Error';
+                document.getElementById('backendStatus').className = backendResponse.ok ? 'status-ok' : 'status-error';
+                
+                // Check WebSocket (try to connect)
+                const ws = new WebSocket('ws://localhost:8080/ws/driver-notifications?driverId=test');
+                ws.onopen = () => {
+                    document.getElementById('websocketStatus').textContent = '✅ Connected';
+                    document.getElementById('websocketStatus').className = 'status-ok';
+                    ws.close();
+                };
+                ws.onerror = () => {
+                    document.getElementById('websocketStatus').textContent = '❌ Error';
+                    document.getElementById('websocketStatus').className = 'status-error';
+                };
+                
+                // Check database (via backend)
+                if (backendResponse.ok) {
+                    document.getElementById('databaseStatus').textContent = '✅ Connected';
+                    document.getElementById('databaseStatus').className = 'status-ok';
+                } else {
+                    document.getElementById('databaseStatus').textContent = '❌ Error';
+                    document.getElementById('databaseStatus').className = 'status-error';
+                }
+                
+            } catch (error) {
+                document.getElementById('backendStatus').textContent = '❌ Offline';
+                document.getElementById('backendStatus').className = 'status-error';
+                document.getElementById('websocketStatus').textContent = '❌ Offline';
+                document.getElementById('websocketStatus').className = 'status-error';
+                document.getElementById('databaseStatus').textContent = '❌ Offline';
+                document.getElementById('databaseStatus').className = 'status-error';
+            }
+        }
+        
+        // Check status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystemStatus();
+            
+            // Auto-refresh status every 30 seconds
+            setInterval(checkSystemStatus, 30000);
+        });
+    </script>
+</body>
+</html> 
