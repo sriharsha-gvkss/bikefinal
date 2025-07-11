@@ -1,8 +1,37 @@
 FROM confluentinc/cp-zookeeper:7.5.0
 
+# Install netcat and curl for health checks
+RUN apt-get update && apt-get install -y netcat-openbsd curl && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
 ENV ZOOKEEPER_CLIENT_PORT=2181
 ENV ZOOKEEPER_TICK_TIME=2000
+ENV ZOOKEEPER_INIT_LIMIT=5
+ENV ZOOKEEPER_SYNC_LIMIT=2
 
-EXPOSE 2181
+# Create a startup script that runs both Zookeeper and a health check server
+RUN echo '#!/bin/bash\n\
+# Start Zookeeper in the background\n\
+zookeeper-server-start /etc/kafka/zookeeper.properties &\n\
+ZOOKEEPER_PID=$!\n\
+\n\
+# Wait for Zookeeper to start\n\
+sleep 10\n\
+\n\
+# Start a simple HTTP server for health checks\n\
+while true; do\n\
+  if echo "ruok" | nc localhost 2181 | grep -q "imok"; then\n\
+    echo "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nZookeeper is running" | nc -l -p 8080\n\
+  else\n\
+    echo "HTTP/1.1 503 Service Unavailable\nContent-Type: text/plain\n\nZookeeper is not ready" | nc -l -p 8080\n\
+  fi\n\
+done &\n\
+\n\
+# Wait for Zookeeper process\n\
+wait $ZOOKEEPER_PID' > /start.sh && chmod +x /start.sh
 
-CMD ["zookeeper-server-start", "/etc/kafka/zookeeper.properties"] 
+# Expose both Zookeeper and HTTP ports
+EXPOSE 2181 8080
+
+# Start the combined service
+CMD ["/start.sh"] 

@@ -1,11 +1,37 @@
 FROM confluentinc/cp-kafka:7.5.0
 
+# Install netcat for health checks
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+
 ENV KAFKA_BROKER_ID=1
 ENV KAFKA_ZOOKEEPER_CONNECT=${ZOOKEEPER_URL}:2181
 ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://${KAFKA_URL}:9092
 ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
 ENV KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 
-EXPOSE 9092
+# Create a startup script that runs both Kafka and a health check server
+RUN echo '#!/bin/bash\n\
+# Start Kafka in the background\n\
+kafka-server-start /etc/kafka/kafka.properties &\n\
+KAFKA_PID=$!\n\
+\n\
+# Wait for Kafka to start\n\
+sleep 15\n\
+\n\
+# Start a simple HTTP server for health checks\n\
+while true; do\n\
+  if echo "ruok" | nc localhost 9092 > /dev/null 2>&1; then\n\
+    echo "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nKafka is running" | nc -l -p 8080\n\
+  else\n\
+    echo "HTTP/1.1 503 Service Unavailable\nContent-Type: text/plain\n\nKafka is not ready" | nc -l -p 8080\n\
+  fi\n\
+done &\n\
+\n\
+# Wait for Kafka process\n\
+wait $KAFKA_PID' > /start.sh && chmod +x /start.sh
 
-CMD ["kafka-server-start", "/etc/kafka/kafka.properties"] 
+# Expose both Kafka and HTTP ports
+EXPOSE 9092 8080
+
+# Start the combined service
+CMD ["/start.sh"] 
