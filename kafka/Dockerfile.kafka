@@ -1,7 +1,7 @@
 FROM confluentinc/cp-kafka:7.5.0
 
-# Install netcat for health checks
-RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+# Install netcat for health checks (Alpine uses apk, not apt-get)
+RUN apk add --no-cache netcat-openbsd
 
 ENV KAFKA_BROKER_ID=1
 ENV KAFKA_ZOOKEEPER_CONNECT=${ZOOKEEPER_URL}:2181

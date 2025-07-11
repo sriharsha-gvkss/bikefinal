@@ -1,7 +1,7 @@
 FROM confluentinc/cp-zookeeper:7.5.0
 
-# Install netcat and curl for health checks
-RUN apt-get update && apt-get install -y netcat-openbsd curl && rm -rf /var/lib/apt/lists/*
+# Install netcat for health checks (Alpine uses apk, not apt-get)
+RUN apk add --no-cache netcat-openbsd
 
 # Set environment variables
 ENV ZOOKEEPER_CLIENT_PORT=2181
