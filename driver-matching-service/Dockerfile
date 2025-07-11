@@ -1,35 +1,12 @@
-FROM openjdk:17-jdk-slim
-
+# ---- Build Stage ----
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy the Maven wrapper and pom.xml
-COPY .mvn/ .mvn/
-COPY mvnw .
-COPY pom.xml .
-
-# Make mvnw executable
-RUN chmod +x mvnw
-
-# Download dependencies
-RUN ./mvnw dependency:go-offline -B
-
-# Copy source code
-COPY src/ src/
-
-# Build the application
-RUN ./mvnw clean package -DskipTests
-
-# Create a non-root user
-RUN addgroup --system javauser && adduser --system --ingroup javauser javauser
-
-# Change ownership of the app directory
-RUN chown -R javauser:javauser /app
-
-# Switch to non-root user
-USER javauser
-
-# Expose the port
+# ---- Run Stage ----
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081
-
-# Run the application
-CMD ["java", "-jar", "target/*.jar"] 
+CMD ["java", "-jar", "app.jar"] 
