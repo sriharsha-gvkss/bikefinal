@@ -44,32 +44,20 @@ services:
   booking-service:
     image: sriharsha3/bikeriderapp:booking-service
     container_name: biketaxi-booking-service
-    depends_on:
-      - postgres
-      - kafka
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/biketaxi
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: pass
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      # Optional: Set your Google Maps API key here for better location names
-      # GOOGLE_MAPS_API_KEY: your_google_maps_api_key_here
     ports:
       - "8080:8080"
-    networks:
-      - biketaxi-net
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # Add other environment variables as needed
 
   driver-matching-service:
     image: sriharsha3/bikeriderapp:driver-matching-service
     container_name: biketaxi-driver-matching-service
-    depends_on:
-      - kafka
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
-      - "8082:8082"
-    networks:
-      - biketaxi-net
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # Add other environment variables as needed
 
   frontend:
     image: sriharsha3/bikeriderapp:frontend
@@ -79,8 +67,15 @@ services:
     depends_on:
       - booking-service
       - driver-matching-service
-    networks:
-      - biketaxi-net
+
+  frontend-v2:
+    image: sriharsha3/bikeriderapp:frontend-v2
+    container_name: biketaxi-frontend-v2
+    ports:
+      - "3001:80"
+    depends_on:
+      - booking-service
+      - driver-matching-service
 
 volumes:
   postgres_data: 
