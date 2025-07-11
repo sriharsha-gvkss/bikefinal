@@ -10,7 +10,7 @@ services:
   - type: web
     name: biketaxi-booking-service
     env: docker
-    dockerImage: sriharsha3/bikeriderapp:booking-service
+    dockerImage: docker pull sriharsha3/bikeriderapp:booking-service
     region: oregon
     plan: free
     envVars:
@@ -35,7 +35,7 @@ services:
   - type: web
     name: biketaxi-driver-matching-service
     env: docker
-    dockerImage: sriharsha3/bikeriderapp:driver-matching-service
+    dockerImage: docker pull sriharsha3/bikeriderapp:driver-matching-service
     region: oregon
     plan: free
     envVars:
@@ -48,7 +48,7 @@ services:
   - type: web
     name: biketaxi-frontend
     env: docker
-    dockerImage: sriharsha3/bikeriderapp:frontend
+    dockerImage: docker pull sriharsha3/bikeriderapp:frontend
     region: oregon
     plan: free
     envVars:
