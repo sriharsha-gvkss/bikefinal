@@ -5,17 +5,14 @@ services:
     env: postgresql
     plan: free
     region: oregon
-    databaseName: biketaxi
-    user: biketaxi_user
 
   # Booking Service
   - type: web
     name: biketaxi-booking-service
     env: docker
-    image: sriharsha3/bikeriderapp:booking-service
+    dockerImage: sriharsha3/bikeriderapp:booking-service
     region: oregon
     plan: free
-    port: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -38,10 +35,9 @@ services:
   - type: web
     name: biketaxi-driver-matching-service
     env: docker
-    image: sriharsha3/bikeriderapp:driver-matching-service
+    dockerImage: sriharsha3/bikeriderapp:driver-matching-service
     region: oregon
     plan: free
-    port: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -52,10 +48,9 @@ services:
   - type: web
     name: biketaxi-frontend
     env: docker
-    image: sriharsha3/bikeriderapp:frontend
+    dockerImage: sriharsha3/bikeriderapp:frontend
     region: oregon
     plan: free
-    port: 80
     envVars:
       - key: REACT_APP_BOOKING_SERVICE_URL
         value: https://biketaxi-booking-service.onrender.com
