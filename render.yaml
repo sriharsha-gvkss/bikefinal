@@ -15,6 +15,7 @@ services:
     image: sriharsha3/bikeriderapp:booking-service
     region: oregon
     plan: free
+    port: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -40,6 +41,7 @@ services:
     image: sriharsha3/bikeriderapp:driver-matching-service
     region: oregon
     plan: free
+    port: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -53,10 +55,11 @@ services:
     image: sriharsha3/bikeriderapp:frontend
     region: oregon
     plan: free
+    port: 80
     envVars:
       - key: REACT_APP_BOOKING_SERVICE_URL
         value: https://biketaxi-booking-service.onrender.com
       - key: REACT_APP_DRIVER_MATCHING_SERVICE_URL
         value: https://biketaxi-driver-matching-service.onrender.com
       - key: REACT_APP_GOOGLE_MAPS_API_KEY
-        sync: false  # You'll need to set this manually 
+        sync: false 
