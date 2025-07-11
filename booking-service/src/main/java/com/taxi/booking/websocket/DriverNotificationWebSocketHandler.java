@@ -15,6 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -118,19 +119,18 @@ public class DriverNotificationWebSocketHandler extends TextWebSocketHandler {
             String pickupLocationName = LocationUtils.getLocationName(booking.getPickupLocation());
             String destinationLocationName = LocationUtils.getLocationName(booking.getDestination());
             
-            Map<String, Object> notification = Map.of(
-                "type", "RIDE_REQUEST",
-                "bookingId", booking.getId(),
-                "pickupLocation", pickupLocationName,
-                "destinationLocation", destinationLocationName,
-                "pickupCoordinates", booking.getPickupLocation(), // Keep original coordinates for reference
-                "destinationCoordinates", booking.getDestination(), // Keep original coordinates for reference
-                "distance", String.format("%.1f km", distance),
-                "duration", String.format("%.0f min", duration),
-                "price", String.format("₹%.0f", price),
-                "riderName", booking.getRiderId(),
-                "timestamp", System.currentTimeMillis()
-            );
+            Map<String, Object> notification = new HashMap<>();
+            notification.put("type", "RIDE_REQUEST");
+            notification.put("bookingId", booking.getId());
+            notification.put("pickupLocation", pickupLocationName);
+            notification.put("destinationLocation", destinationLocationName);
+            notification.put("pickupCoordinates", booking.getPickupLocation()); // Keep original coordinates for reference
+            notification.put("destinationCoordinates", booking.getDestination()); // Keep original coordinates for reference
+            notification.put("distance", String.format("%.1f km", distance));
+            notification.put("duration", String.format("%.0f min", duration));
+            notification.put("price", String.format("₹%.0f", price));
+            notification.put("riderName", booking.getRiderId());
+            notification.put("timestamp", System.currentTimeMillis());
             
             sendToDriver(driverId, notification);
             log.info("✅ Successfully sent ride request to driver {} for booking {} - Pickup: {}, Destination: {}", 

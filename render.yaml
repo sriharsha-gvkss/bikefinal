@@ -1,0 +1,62 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: biketaxi-db
+    env: postgresql
+    plan: free
+    region: oregon
+    databaseName: biketaxi
+    user: biketaxi_user
+
+  # Booking Service
+  - type: web
+    name: biketaxi-booking-service
+    env: docker
+    image: sriharsha3/bikeriderapp:booking-service
+    region: oregon
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: biketaxi-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: biketaxi-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: biketaxi-db
+          property: password
+      - key: PORT
+        value: 8080
+
+  # Driver Matching Service
+  - type: web
+    name: biketaxi-driver-matching-service
+    env: docker
+    image: sriharsha3/bikeriderapp:driver-matching-service
+    region: oregon
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 8081
+
+  # Frontend
+  - type: web
+    name: biketaxi-frontend
+    env: docker
+    image: sriharsha3/bikeriderapp:frontend
+    region: oregon
+    plan: free
+    envVars:
+      - key: REACT_APP_BOOKING_SERVICE_URL
+        value: https://biketaxi-booking-service.onrender.com
+      - key: REACT_APP_DRIVER_MATCHING_SERVICE_URL
+        value: https://biketaxi-driver-matching-service.onrender.com
+      - key: REACT_APP_GOOGLE_MAPS_API_KEY
+        sync: false  # You'll need to set this manually 
