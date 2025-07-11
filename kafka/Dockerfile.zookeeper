@@ -6,30 +6,9 @@ ENV ZOOKEEPER_TICK_TIME=2000
 ENV ZOOKEEPER_INIT_LIMIT=5
 ENV ZOOKEEPER_SYNC_LIMIT=2
 
-# Create a startup script that runs both Zookeeper and a simple HTTP server
-RUN echo '#!/bin/bash\n\
-# Start Zookeeper in the background\n\
-zookeeper-server-start /etc/kafka/zookeeper.properties &\n\
-ZOOKEEPER_PID=$!\n\
-\n\
-# Wait for Zookeeper to start\n\
-sleep 10\n\
-\n\
-# Start a simple HTTP server for health checks using Python (if available) or basic shell\n\
-while true; do\n\
-  # Check if Zookeeper is running by trying to connect to port 2181\n\
-  if timeout 1 bash -c "</dev/tcp/localhost/2181" 2>/dev/null; then\n\
-    # Simple HTTP response indicating Zookeeper is running\n\
-    printf "HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\nContent-Length: 20\\r\\n\\r\\nZookeeper is running" | nc -l -p 8080 2>/dev/null || true\n\
-  else\n\
-    # Simple HTTP response indicating Zookeeper is not ready\n\
-    printf "HTTP/1.1 503 Service Unavailable\\r\\nContent-Type: text/plain\\r\\nContent-Length: 22\\r\\n\\r\\nZookeeper not ready" | nc -l -p 8080 2>/dev/null || true\n\
-  fi\n\
-  sleep 5\n\
-done &\n\
-\n\
-# Wait for Zookeeper process\n\
-wait $ZOOKEEPER_PID' > /start.sh && chmod +x /start.sh
+# Copy the startup script
+COPY start-zookeeper.sh /start.sh
+RUN chmod +x /start.sh
 
 # Expose both Zookeeper and HTTP ports
 EXPOSE 2181 8080

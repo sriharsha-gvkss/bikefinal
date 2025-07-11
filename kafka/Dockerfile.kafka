@@ -7,30 +7,9 @@ ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://${KAFKA_URL}:9092
 ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
 ENV KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 
-# Create a startup script that runs both Kafka and a simple HTTP server
-RUN echo '#!/bin/bash\n\
-# Start Kafka in the background\n\
-kafka-server-start /etc/kafka/kafka.properties &\n\
-KAFKA_PID=$!\n\
-\n\
-# Wait for Kafka to start\n\
-sleep 15\n\
-\n\
-# Start a simple HTTP server for health checks\n\
-while true; do\n\
-  # Check if Kafka is running by trying to connect to port 9092\n\
-  if timeout 1 bash -c "</dev/tcp/localhost/9092" 2>/dev/null; then\n\
-    # Simple HTTP response indicating Kafka is running\n\
-    printf "HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\nContent-Length: 16\\r\\n\\r\\nKafka is running" | nc -l -p 8080 2>/dev/null || true\n\
-  else\n\
-    # Simple HTTP response indicating Kafka is not ready\n\
-    printf "HTTP/1.1 503 Service Unavailable\\r\\nContent-Type: text/plain\\r\\nContent-Length: 18\\r\\n\\r\\nKafka not ready" | nc -l -p 8080 2>/dev/null || true\n\
-  fi\n\
-  sleep 5\n\
-done &\n\
-\n\
-# Wait for Kafka process\n\
-wait $KAFKA_PID' > /start.sh && chmod +x /start.sh
+# Copy the startup script
+COPY start-kafka.sh /start.sh
+RUN chmod +x /start.sh
 
 # Expose both Kafka and HTTP ports
 EXPOSE 9092 8080
