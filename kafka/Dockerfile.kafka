@@ -1,15 +1,13 @@
 FROM confluentinc/cp-kafka:7.5.0
 
-# Install netcat for health checks (Alpine uses apk, not apt-get)
-RUN apk add --no-cache netcat-openbsd
-
+# Set environment variables
 ENV KAFKA_BROKER_ID=1
 ENV KAFKA_ZOOKEEPER_CONNECT=${ZOOKEEPER_URL}:2181
 ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://${KAFKA_URL}:9092
 ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
 ENV KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 
-# Create a startup script that runs both Kafka and a health check server
+# Create a startup script that runs both Kafka and a simple HTTP server
 RUN echo '#!/bin/bash\n\
 # Start Kafka in the background\n\
 kafka-server-start /etc/kafka/kafka.properties &\n\
@@ -20,11 +18,15 @@ sleep 15\n\
 \n\
 # Start a simple HTTP server for health checks\n\
 while true; do\n\
-  if echo "ruok" | nc localhost 9092 > /dev/null 2>&1; then\n\
-    echo "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nKafka is running" | nc -l -p 8080\n\
+  # Check if Kafka is running by trying to connect to port 9092\n\
+  if timeout 1 bash -c "</dev/tcp/localhost/9092" 2>/dev/null; then\n\
+    # Simple HTTP response indicating Kafka is running\n\
+    printf "HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\nContent-Length: 16\\r\\n\\r\\nKafka is running" | nc -l -p 8080 2>/dev/null || true\n\
   else\n\
-    echo "HTTP/1.1 503 Service Unavailable\nContent-Type: text/plain\n\nKafka is not ready" | nc -l -p 8080\n\
+    # Simple HTTP response indicating Kafka is not ready\n\
+    printf "HTTP/1.1 503 Service Unavailable\\r\\nContent-Type: text/plain\\r\\nContent-Length: 18\\r\\n\\r\\nKafka not ready" | nc -l -p 8080 2>/dev/null || true\n\
   fi\n\
+  sleep 5\n\
 done &\n\
 \n\
 # Wait for Kafka process\n\
