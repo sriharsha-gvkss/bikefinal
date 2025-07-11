@@ -1,11 +1,4 @@
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: biketaxi-db
-    env: postgresql
-    plan: free
-    region: oregon
-
   # Booking Service
   - type: web
     name: biketaxi-booking-service
@@ -17,17 +10,11 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: biketaxi-db
-          property: connectionString
+        value: jdbc:postgresql://dpg-d1oauq3uibrs73chhlp0-a:5432/biketaxi
       - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: biketaxi-db
-          property: user
+        value: biketaxi_user
       - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: biketaxi-db
-          property: password
+        value: MGun3SgtKFC4E6TNp1o7UI0FbQV2ld8g
       - key: PORT
         value: 8080
 
@@ -41,6 +28,12 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://dpg-d1oauq3uibrs73chhlp0-a:5432/biketaxi
+      - key: SPRING_DATASOURCE_USERNAME
+        value: biketaxi_user
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: MGun3SgtKFC4E6TNp1o7UI0FbQV2ld8g
       - key: PORT
         value: 8081
 
