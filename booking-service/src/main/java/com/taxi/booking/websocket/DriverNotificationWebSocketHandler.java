@@ -69,7 +69,7 @@ public class DriverNotificationWebSocketHandler extends TextWebSocketHandler {
         }
     }
     
-    private void handleRideResponse(Map<String, Object> response) {
+    public void handleRideResponse(Map<String, Object> response) {
         try {
             String driverId = (String) response.get("driverId");
             Long bookingId = Long.valueOf(response.get("bookingId").toString());

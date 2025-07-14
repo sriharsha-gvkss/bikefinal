@@ -104,7 +104,7 @@ public class DriverWebSocketHandler extends TextWebSocketHandler {
             double lng = Double.parseDouble(location.get("longitude").toString());
             
             // Update driver location in the geo matching service
-            geoMatchingService.updateDriverLocation(driverId, lat, lng);
+            geoMatchingService.updateDriverLocation(new com.taxi.booking.model.DriverLocation(driverId, lat, lng));
             
             log.debug("Updated driver {} location: lat={}, lng={}", driverId, lat, lng);
             
