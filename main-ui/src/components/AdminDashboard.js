@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import Header from './Header';
+import config from '../config';
 
-const API_BASE = '/api';
+const API_BASE = config.bookingServiceUrl;
 
 const AdminDashboard = () => {
   const { auth } = useAuth();

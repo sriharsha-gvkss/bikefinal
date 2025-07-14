@@ -1,12 +1,11 @@
 spring:
+  # Disable Kafka auto-configuration in production
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    security:
-      protocol: ${SPRING_KAFKA_SECURITY_PROTOCOL:SASL_SSL}
-    sasl:
-      mechanism: ${SPRING_KAFKA_SASL_MECHANISM:PLAIN}
-      jaas:
-        config: ${SPRING_KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="your-username" password="your-password";}
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: matcher
       auto-offset-reset: earliest
@@ -27,4 +26,6 @@ logging:
 # Custom configuration
 app:
   kafka:
-    enabled: true 
+    enabled: false  # Disable Kafka in production
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:https://biketaxi-frontend.onrender.com} 

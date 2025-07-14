@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../AuthContext';
 import Header from './Header';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import LocationService from '../services/LocationService';
 import DriverTrackingMap from './DriverTrackingMap';
 import SimpleDriverMap from './SimpleDriverMap';
+import config from '../config';
 
-const API_BASE = '/api';
+const API_BASE = config.bookingServiceUrl;
 
 const mapContainerStyle = {
   width: '100%',

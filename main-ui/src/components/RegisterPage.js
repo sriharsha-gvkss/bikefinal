@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import config from '../config';
 
-const API_URL = '/api/auth/register';
+const API_URL = `${config.bookingServiceUrl}/api/auth/register`;
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({

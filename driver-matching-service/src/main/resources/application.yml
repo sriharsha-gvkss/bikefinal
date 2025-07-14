@@ -21,4 +21,6 @@ logging:
 # Custom configuration
 app:
   kafka:
-    enabled: true  # Set to true to enable Kafka 
+    enabled: true  # Set to true to enable Kafka
+  cors:
+    allowed-origins: http://localhost:3000,https://localhost:3000,https://biketaxi-frontend.onrender.com 

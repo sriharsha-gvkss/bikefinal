@@ -45,6 +45,8 @@ app:
   kafka:
     enabled: true  # Set to true to enable Kafka
     topic: booking-events
+  cors:
+    allowed-origins: http://localhost:3000,https://localhost:3000,https://biketaxi-frontend.onrender.com
 
 # Actuator configuration
 management:

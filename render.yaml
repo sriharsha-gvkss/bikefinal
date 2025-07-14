@@ -17,6 +17,8 @@ services:
         value: MGun3SgtKFC4E6TNp1o7UI0FbQV2ld8g
       - key: PORT
         value: 8080
+      - key: APP_CORS_ALLOWED_ORIGINS
+        value: https://biketaxi-frontend.onrender.com
 
   # Driver Matching Service
   - type: web
@@ -36,6 +38,8 @@ services:
         value: MGun3SgtKFC4E6TNp1o7UI0FbQV2ld8g
       - key: PORT
         value: 8081
+      - key: APP_CORS_ALLOWED_ORIGINS
+        value: https://biketaxi-frontend.onrender.com
 
   # Frontend
   - type: web
@@ -49,5 +53,9 @@ services:
         value: https://biketaxi-booking-service.onrender.com
       - key: REACT_APP_DRIVER_MATCHING_SERVICE_URL
         value: https://biketaxi-driver-matching-service.onrender.com
+      - key: REACT_APP_BOOKING_SERVICE_WS_URL
+        value: wss://biketaxi-booking-service.onrender.com
+      - key: REACT_APP_DRIVER_MATCHING_SERVICE_WS_URL
+        value: wss://biketaxi-driver-matching-service.onrender.com
       - key: REACT_APP_GOOGLE_MAPS_API_KEY
         sync: false  # Set this manually in Render dashboard 

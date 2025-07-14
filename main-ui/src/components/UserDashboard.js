@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../AuthContext';
 import Header from './Header';
 import GoogleMapComponent from './GoogleMapComponent';
 import LiveTrackingMap from './LiveTrackingMap';
+import config from '../config';
 
-const API_BASE = '/api';
+const API_BASE = config.bookingServiceUrl;
 
 const UserDashboard = () => {
   const { auth } = useAuth();

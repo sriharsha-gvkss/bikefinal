@@ -14,15 +14,14 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
   
-  # Kafka configuration for Upstash
+  # Disable Kafka auto-configuration in production
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  
+  # Kafka configuration - disabled in production
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    security:
-      protocol: ${SPRING_KAFKA_SECURITY_PROTOCOL:SASL_SSL}
-    sasl:
-      mechanism: ${SPRING_KAFKA_SASL_MECHANISM:PLAIN}
-      jaas:
-        config: ${SPRING_KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="your-username" password="your-password";}
+    bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -44,10 +43,10 @@ logging:
 # Custom configuration
 app:
   kafka:
-    enabled: true
+    enabled: false  # Disable Kafka in production
     topic: booking-events
   cors:
-    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:https://your-frontend-url.onrender.com}
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:https://biketaxi-frontend.onrender.com}
 
 # Actuator configuration
 management:

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import config from '../config';
 
-const API_URL = '/api/auth/login';
+const API_URL = `${config.bookingServiceUrl}/api/auth/login`;
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
