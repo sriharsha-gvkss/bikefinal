@@ -14,12 +14,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
   
-  # Disable Kafka auto-configuration in production
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-  
-  # Kafka configuration - disabled in production
+  # Kafka configuration - enabled in production
   kafka:
     bootstrap-servers: localhost:9092
     producer:

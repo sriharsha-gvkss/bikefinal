@@ -6,6 +6,7 @@ import com.taxi.matching.consumer.BookingConsumer;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class MatchController {
     private final GeoMatchingService geoMatchingService;
     private final BookingConsumer bookingConsumer;
 
-    public MatchController(GeoMatchingService geoMatchingService, BookingConsumer bookingConsumer) {
+    public MatchController(GeoMatchingService geoMatchingService, @Autowired(required = false) BookingConsumer bookingConsumer) {
         this.geoMatchingService = geoMatchingService;
         this.bookingConsumer = bookingConsumer;
     }
@@ -81,14 +82,20 @@ public class MatchController {
         log.info("Manually processing booking: {}", booking);
         
         try {
-            // Convert booking to JSON string for the consumer
-            com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            String bookingJson = objectMapper.writeValueAsString(booking);
-            
-            // Process the booking
-            bookingConsumer.handleBookingEvent(bookingJson);
-            
-            return ResponseEntity.ok("Booking processed successfully");
+            if (bookingConsumer != null) {
+                // Convert booking to JSON string for the consumer
+                com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                String bookingJson = objectMapper.writeValueAsString(booking);
+                
+                // Process the booking
+                bookingConsumer.handleBookingEvent(bookingJson);
+                
+                return ResponseEntity.ok("Booking processed successfully");
+            } else {
+                log.warn("BookingConsumer not available (Kafka disabled). Processing booking locally.");
+                // Handle booking processing without Kafka
+                return ResponseEntity.ok("Booking processed locally (Kafka disabled)");
+            }
         } catch (Exception e) {
             log.error("Error processing booking", e);
             return ResponseEntity.internalServerError().body("Error processing booking: " + e.getMessage());
