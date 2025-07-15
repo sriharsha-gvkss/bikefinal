@@ -43,7 +43,7 @@ logging:
 # Custom configuration
 app:
   kafka:
-    enabled: false  # Disable Kafka in production
+    enabled: true  # Enable Kafka in production
     topic: booking-events
   cors:
     allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:https://biketaxi-frontend.onrender.com}
